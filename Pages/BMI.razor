@@ -1,0 +1,78 @@
+﻿@page "/bmi"
+
+<h3>Oblicz BMI</h3>
+
+<div class="form-group">
+    <label for="weight">Waga (kg):</label>
+    <input type="number" @bind="weight" class="form-control" />
+</div>
+
+<div class="form-group">
+    <label for="height">Wzrost (cm):</label>
+    <input type="number" @bind="height" class="form-control" />
+</div>
+
+<button class="btn btn-primary" @onclick="CalculateBMI">Oblicz BMI</button>
+
+@if (bmi > 0)
+{
+    <h4>Twoje BMI: @bmi</h4>
+    <p>Kategoria: @category</p>
+}
+
+<style>
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    h4 {
+        margin-top: 20px;
+    }
+</style>
+
+@code {
+
+    private double weight = 0;
+    private double height = 0;
+
+   
+    private double bmi = 0;
+    private string category = string.Empty;
+
+ 
+    private void CalculateBMI()
+    {
+        if (weight > 0 && height > 0)
+        {
+    
+            double heightInMeters = height / 100;
+
+       
+            bmi = weight / (heightInMeters * heightInMeters);
+
+            
+            if (bmi < 18.5)
+            {
+                category = "Niedowaga";
+            }
+            else if (bmi >= 18.5 && bmi < 24.9)
+            {
+                category = "Waga prawidłowa";
+            }
+            else if (bmi >= 25 && bmi < 29.9)
+            {
+                category = "Nadwaga";
+            }
+            else
+            {
+                category = "Otyłość";
+            }
+        }
+        else
+        {
+           
+            bmi = 0;
+            category = "Podaj poprawną wagę i wzrost";
+        }
+    }
+}

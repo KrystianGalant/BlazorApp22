@@ -1,0 +1,78 @@
+﻿@page "/todo"
+
+<h3>To-Do List</h3>
+
+<div class="todo-input">
+    <input @bind="newTask" placeholder="Add new task..." />
+    <button class="btn btn-primary" @onclick="AddTask">Add</button>
+</div>
+
+<ul>
+    @foreach (var task in tasks)
+    {
+        <li>
+            <span class="@((task.IsCompleted ? "completed" : ""))" @onclick="() => ToggleComplete(task)">
+                @task.Description
+            </span>
+            <button class="btn btn-danger btn-sm" @onclick="() => RemoveTask(task)">Delete</button>
+        </li>
+    }
+</ul>
+
+<style>
+    .todo-input {
+        margin-bottom: 10px;
+        display: flex;
+        gap: 10px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        margin: 10px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .completed {
+        text-decoration: line-through;
+        color: #888;
+    }
+</style>
+
+@code {
+    
+    private string newTask = string.Empty;
+
+    private List<TaskItem> tasks = new();
+
+    private void AddTask()
+    {
+        if (!string.IsNullOrWhiteSpace(newTask))
+        {
+            tasks.Add(new TaskItem { Description = newTask, IsCompleted = false });
+            newTask = string.Empty;
+        }
+    }
+
+    
+    private void RemoveTask(TaskItem task)
+    {
+        tasks.Remove(task);
+    }
+
+    private void ToggleComplete(TaskItem task)
+    {
+        task.IsCompleted = !task.IsCompleted;
+    }
+
+    public class TaskItem
+    {
+        public string Description { get; set; } = string.Empty;
+        public bool IsCompleted { get; set; }
+    }
+}
